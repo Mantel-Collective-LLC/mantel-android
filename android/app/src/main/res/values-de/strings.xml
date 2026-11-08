@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="disguise_calculator_name">Rechner</string>
+
+    <string name="notification_channel_name">VPN-Status</string>
+    <string name="notification_channel_description">Zeigt an, solange Mantel verbunden ist</string>
+    <string name="notification_title_connected_to">Mantel · Verbunden mit %1$s</string>
+    <string name="notification_title_connected">Mantel · Verbunden</string>
+    <string name="notification_title_interrupted">Mantel · Verbindung unterbrochen</string>
+    <string name="notification_interrupted">Seit über 3 Minuten kein Handshake. Öffne Mantel, um es zu prüfen.</string>
+    <string name="notification_action_disconnect">Trennen</string>
+    <string name="notification_waiting">Warte auf Antwort des Servers …</string>
+
+    <string name="tile_connected">Verbunden</string>
+    <string name="tile_connecting">Verbinde …</string>
+    <string name="tile_disconnected">Nicht verbunden</string>
+
+    <string name="error_vpn_permission">Mantel hat keine VPN-Berechtigung. Bestätige die VPN-Anfrage von Android.</string>
+    <string name="error_vpn_permission_request">Die VPN-Berechtigung lässt sich gerade nicht anfragen.</string>
+    <string name="error_vpn_revoked">Android hat den VPN-Tunnel beendet (VPN-Berechtigung entzogen oder andere VPN-App aktiv).</string>
+    <string name="error_config_invalid">Die WireGuard-Konfiguration ist ungültig.</string>
+    <string name="error_config_invalid_at">Die WireGuard-Konfiguration ist ungültig (%1$s: %2$s).</string>
+    <string name="error_config_no_peer">Die WireGuard-Konfiguration enthält keinen Server ([Peer]).</string>
+    <string name="error_config_excluded_apps">App-Ausnahmen lassen sich nicht mit dieser Konfiguration kombinieren (IncludedApplications gesetzt).</string>
+    <string name="error_start_failed_reason">Der Tunnel ließ sich nicht starten: %1$s</string>
+    <string name="error_vpn_service_start">Der Android-VPN-Dienst ließ sich nicht starten.</string>
+    <string name="error_tun_creation">Android hat die VPN-Schnittstelle verweigert (ist eine andere App als dauerhaftes VPN eingestellt?).</string>
+    <string name="error_dns_resolution">Der Server „%1$s“ konnte nicht aufgelöst werden.</string>
+    <string name="error_go_activation">WireGuard konnte den Tunnel nicht starten (Fehlercode %1$s).</string>
+    <string name="error_missing_config">Es ist keine Tunnel-Konfiguration vorhanden.</string>
+    <string name="error_wireguard">WireGuard-Fehler (%1$s).</string>
+    <string name="error_open_vpn_settings">Die VPN-Einstellungen lassen sich nicht öffnen.</string>
+    <string name="error_pq_unsupported">Dieser Standort unterstützt den quantenresistenten Tunnel noch nicht. Wähle einen anderen Standort oder schalte die Option in den Einstellungen aus.</string>
+    <string name="error_pq_failed">Der quantenresistente Schlüsselaustausch ist fehlgeschlagen. Es wurde keine Verbindung ohne Quantenschutz aufgebaut.</string>
+    <string name="error_pq_mismatch">Der quantenresistente Schlüsselaustausch ließ sich nicht bestätigen. Es wurde keine Verbindung ohne Quantenschutz aufgebaut.</string>
+    <string name="error_pq_not_active">Der quantenresistente Tunnel wurde nicht aktiv. Es wurde keine Verbindung ohne Quantenschutz aufgebaut.</string>
+    <string name="error_pq_cancelled">Der Verbindungsaufbau wurde abgebrochen.</string>
+    <string name="error_obfs_unavailable">Verschleierung steht auf „An“, aber dieser Standort oder dieses Gerät bietet sie noch nicht an. Wähle einen anderen Standort oder stelle die Verschleierung auf „Auto“.</string>
+    <string name="error_obfs_old_android">Verschleierung braucht Android 10 oder neuer. Stelle sie auf „Auto“ oder „Aus“.</string>
+    <string name="error_obfs_failed">Der Standort ist über die verschleierte Verbindung (TLS, Port 443) nicht erreichbar.</string>
+    <string name="error_obfs_pin">Der Verschleierungsschlüssel des Standorts stimmt nicht. Mantel hat nicht verbunden.</string>
+    <string name="config_reason_invalid_key">ungültiger Schlüssel</string>
+    <string name="config_reason_invalid_number">ungültige Zahl</string>
+    <string name="config_reason_invalid_value">ungültiger Wert</string>
+    <string name="config_reason_missing_attribute">Angabe fehlt</string>
+    <string name="config_reason_missing_section">Abschnitt fehlt</string>
+    <string name="config_reason_syntax_error">Syntaxfehler</string>
+    <string name="config_reason_unknown_attribute">unbekannte Angabe</string>
+    <string name="config_reason_unknown_section">unbekannter Abschnitt</string>
+</resources>

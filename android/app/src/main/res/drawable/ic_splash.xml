@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="2.25"
+        android:scaleY="2.25"
+        android:translateX="27"
+        android:translateY="27">
+        <path
+            android:fillColor="@color/mantel_logo_tile"
+            android:pathData="M7,0h10a7,7 0,0 1,7 7v10a7,7 0,0 1,-7 7h-10a7,7 0,0 1,-7 -7v-10a7,7 0,0 1,7 -7z" />
+        <path
+            android:pathData="M7,16.5V8.2c0,-0.5 0.6,-0.8 1,-0.4l4,3.7 4,-3.7c0.4,-0.4 1,-0.1 1,0.4v8.3"
+            android:strokeColor="@color/mantel_logo_mark"
+            android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="@color/mantel_accent"
+            android:pathData="M12,16.6m-1.4,0a1.4,1.4 0,1 1,2.8 0a1.4,1.4 0,1 1,-2.8 0" />
+    </group>
+</vector>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mantel_canvas_light">#FAFAF9</color>
+    <color name="mantel_canvas_dark">#0C0C0E</color>
+    <color name="mantel_canvas">@color/mantel_canvas_light</color>
+    <color name="mantel_ink">#18181B</color>
+    <color name="mantel_accent">#1F9E74</color>
+    <color name="mantel_logo_tile">#18181B</color>
+    <color name="mantel_logo_mark">#FFFFFF</color>
+    <bool name="mantel_light_bars">true</bool>
+    <color name="mantel_navbar">#18181B</color>
+</resources>

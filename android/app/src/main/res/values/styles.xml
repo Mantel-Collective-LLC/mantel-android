@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/mantel_ink</item>
+        <item name="colorPrimaryDark">@color/mantel_canvas</item>
+        <item name="colorAccent">@color/mantel_accent</item>
+        <item name="android:windowBackground">@color/mantel_canvas</item>
+        <item name="android:statusBarColor">@color/mantel_canvas</item>
+        <item name="android:navigationBarColor">@color/mantel_navbar</item>
+        <item name="android:windowLightStatusBar">@bool/mantel_light_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/mantel_light_bars</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/mantel_canvas</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+        <item name="android:statusBarColor">@color/mantel_canvas</item>
+        <item name="android:navigationBarColor">@color/mantel_navbar</item>
+        <item name="android:windowLightStatusBar">@bool/mantel_light_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/mantel_light_bars</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+    </style>
+</resources>

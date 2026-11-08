@@ -1,0 +1,158 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+def releaseSigningEnv = System.getenv('MANTEL_ANDROID_KEYSTORE_PROPERTIES')
+def releaseSigningFile = releaseSigningEnv
+        ? new File(releaseSigningEnv)
+        : new File(rootProject.projectDir.parentFile, 'keystore.properties')
+def releaseSigning = null
+if (releaseSigningFile.isFile()) {
+    def props = new Properties()
+    releaseSigningFile.withInputStream { props.load(it) }
+    def missing = ['storeFile', 'storePassword', 'keyAlias', 'keyPassword'].findAll { !props.getProperty(it) }
+    if (missing) throw new GradleException("Mantel: ${releaseSigningFile} lacks ${missing.join(', ')}")
+    def storeFile = new File(props.getProperty('storeFile'))
+    if (!storeFile.isAbsolute()) storeFile = new File(releaseSigningFile.parentFile, props.getProperty('storeFile'))
+    if (!storeFile.isFile()) throw new GradleException("Mantel: keystore ${storeFile} (from ${releaseSigningFile}) not found")
+    releaseSigning = [storeFile: storeFile, storePassword: props.getProperty('storePassword'),
+                      keyAlias: props.getProperty('keyAlias'), keyPassword: props.getProperty('keyPassword')]
+} else if (releaseSigningEnv) {
+    throw new GradleException("Mantel: MANTEL_ANDROID_KEYSTORE_PROPERTIES=${releaseSigningEnv} does not exist")
+}
+
+def mantelVersionName = new groovy.json.JsonSlurper()
+        .parse(new File(rootProject.projectDir.parentFile, 'package.json')).version as String
+def mantelVersionMatch = mantelVersionName =~ /^(\d{4})\.(\d{1,2})\.(\d{1,3})$/
+if (!mantelVersionMatch.matches()) {
+    throw new GradleException("Mantel: version ${mantelVersionName} in package.json is not YEAR.MINOR.PATCH (e.g. 2026.0.1)")
+}
+def mantelVersionCode = (mantelVersionMatch.group(1) as int) * 100000 + (mantelVersionMatch.group(2) as int) * 1000 +
+        (mantelVersionMatch.group(3) as int)
+
+android {
+    namespace = "net.mantel.app"
+    compileSdk = rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "net.mantel.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode mantelVersionCode
+        versionName mantelVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        if (releaseSigning) {
+            release {
+                storeFile releaseSigning.storeFile
+                storePassword releaseSigning.storePassword
+                keyAlias releaseSigning.keyAlias
+                keyPassword releaseSigning.keyPassword
+                enableV1Signing false
+                enableV2Signing true
+                enableV3Signing true
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (releaseSigning) signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.all {
+            systemProperty 'mantel.pqVectors', file('src/test/resources/pq-test-vectors.json').absolutePath
+        }
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+            keepDebugSymbols += ['**/libwg-go.so']
+            excludes += ['**/libwg-quick.so', '**/libwg.so']
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+
+    implementation "com.wireguard.android:tunnel:$wireguardTunnelVersion"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarJdkLibsVersion"
+    implementation "org.bouncycastle:bcprov-jdk18on:$bouncyCastleVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.json:json:$orgJsonTestVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+def webFlavorFile = file('src/main/assets/public/mantel-flavor.json')
+def checkWebFlavor = { String expected, boolean strict ->
+    String actual = null
+    if (webFlavorFile.exists()) {
+        def match = (webFlavorFile.text =~ /"flavor"\s*:\s*"(\w+)"/)
+        if (match.find()) actual = match.group(1)
+    }
+    if (actual != expected) {
+        def script = expected == 'prod' ? 'apk:prod' : 'apk:debug'
+        def message = "Mantel: web bundle flavor is '${actual ?: 'missing'}', this variant needs '${expected}'. Build with: npm run ${script}"
+        if (strict) throw new GradleException(message)
+        logger.warn("WARNING: ${message}")
+    }
+}
+tasks.register('checkWebFlavorRelease') { doLast { checkWebFlavor('prod', true) } }
+tasks.register('checkReleaseSigning') {
+    doLast {
+        if (releaseSigning) {
+            logger.lifecycle("Mantel: signing release with key '${releaseSigning.keyAlias}' from ${releaseSigningFile}")
+        } else {
+            logger.warn("WARNING: Mantel: no release signing properties at ${releaseSigningFile} " +
+                    "(or set MANTEL_ANDROID_KEYSTORE_PROPERTIES). The release APK will be UNSIGNED " +
+                    "(app-release-unsigned.apk) and cannot be installed. See keystore.properties.example.")
+        }
+    }
+}
+tasks.register('checkWebFlavorDebug') { doLast { checkWebFlavor('debug', false) } }
+
+tasks.configureEach { task ->
+    if (task.name == 'preReleaseBuild') task.dependsOn('checkWebFlavorRelease', 'checkReleaseSigning')
+    if (task.name == 'preDebugBuild') task.dependsOn('checkWebFlavorDebug')
+}
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name" translatable="false">Mantel</string>
+    <string name="title_activity_main" translatable="false">Mantel</string>
+    <string name="disguise_calculator_name">Calculator</string>
+    <string name="disguise_calculator_name_de" translatable="false">Rechner</string>
+    <string name="disguise_calculator_name_en" translatable="false">Calculator</string>
+    <string name="package_name" translatable="false">net.mantel.app</string>
+    <string name="custom_url_scheme" translatable="false">net.mantel.app</string>
+
+    <string name="notification_channel_name">VPN status</string>
+    <string name="notification_channel_description">Shown while Mantel is connected</string>
+    <string name="notification_title_connected_to">Mantel · Connected to %1$s</string>
+    <string name="notification_title_connected">Mantel · Connected</string>
+    <string name="notification_title_interrupted">Mantel · Connection interrupted</string>
+    <string name="notification_interrupted">No handshake for more than 3 minutes. Open Mantel to check.</string>
+    <string name="notification_action_disconnect">Disconnect</string>
+    <string name="notification_waiting">Waiting for the server to respond …</string>
+
+    <string name="tile_connected">Connected</string>
+    <string name="tile_connecting">Connecting …</string>
+    <string name="tile_disconnected">Not connected</string>
+
+    <string name="error_vpn_permission">Mantel has no VPN permission. Please confirm Android’s VPN request.</string>
+    <string name="error_vpn_permission_request">The VPN permission cannot be requested right now.</string>
+    <string name="error_vpn_revoked">Android stopped the VPN tunnel (VPN permission revoked or another VPN app active).</string>
+    <string name="error_config_invalid">The WireGuard configuration is invalid.</string>
+    <string name="error_config_invalid_at">The WireGuard configuration is invalid (%1$s: %2$s).</string>
+    <string name="error_config_no_peer">The WireGuard configuration contains no server ([Peer]).</string>
+    <string name="error_config_excluded_apps">App exclusions cannot be combined with this configuration (IncludedApplications set).</string>
+    <string name="error_start_failed_reason">The tunnel could not be started: %1$s</string>
+    <string name="error_vpn_service_start">The Android VPN service could not be started.</string>
+    <string name="error_tun_creation">Android refused the VPN interface (is another app set as always-on VPN?).</string>
+    <string name="error_dns_resolution">The server “%1$s” could not be resolved.</string>
+    <string name="error_go_activation">WireGuard could not start the tunnel (error code %1$s).</string>
+    <string name="error_missing_config">There is no tunnel configuration.</string>
+    <string name="error_wireguard">WireGuard error (%1$s).</string>
+    <string name="error_open_vpn_settings">The VPN settings cannot be opened.</string>
+    <string name="error_pq_unsupported">This location doesn’t support the quantum-resistant tunnel yet. Choose another location or turn the option off in Settings.</string>
+    <string name="error_pq_failed">The quantum-resistant key exchange failed. No connection without quantum protection was established.</string>
+    <string name="error_pq_mismatch">The quantum-resistant key exchange could not be confirmed. No connection without quantum protection was established.</string>
+    <string name="error_pq_not_active">The quantum-resistant tunnel did not become active. No connection without quantum protection was established.</string>
+    <string name="error_pq_cancelled">The connection was cancelled.</string>
+    <string name="error_obfs_unavailable">Obfuscation is set to On, but this location or device does not offer it yet. Choose another location or set obfuscation to Auto.</string>
+    <string name="error_obfs_old_android">Obfuscation needs Android 10 or later. Set obfuscation to Auto or Off.</string>
+    <string name="error_obfs_failed">Could not reach the location over the obfuscated connection (TLS, port 443).</string>
+    <string name="error_obfs_pin">The obfuscation key of this location does not match. Mantel did not connect.</string>
+    <string name="config_reason_invalid_key">invalid key</string>
+    <string name="config_reason_invalid_number">invalid number</string>
+    <string name="config_reason_invalid_value">invalid value</string>
+    <string name="config_reason_missing_attribute">attribute missing</string>
+    <string name="config_reason_missing_section">section missing</string>
+    <string name="config_reason_syntax_error">syntax error</string>
+    <string name="config_reason_unknown_attribute">unknown attribute</string>
+    <string name="config_reason_unknown_section">unknown section</string>
+</resources>

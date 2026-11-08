@@ -1,0 +1,237 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@custom-variant android (&:where([data-platform="android"], [data-platform="android"] *));
+@custom-variant mac (&:where([data-platform="darwin"], [data-platform="darwin"] *));
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --color-canvas: #fafaf9;
+  --color-surface: #ffffff;
+  --color-ink: #18181b;
+  --color-on-ink: #ffffff;
+  --color-scrim: rgb(24 24 27 / 0.3);
+  --color-accent: oklch(0.6 0.13 162);
+  --color-accent-strong: oklch(0.5 0.12 162);
+  --color-accent-soft: oklch(0.965 0.025 162);
+
+  --color-stop: #dc2626;
+  --color-stop-hover: #b91c1c;
+  --color-stop-active: #991b1b;
+  --color-on-stop: #ffffff;
+
+  --shadow-card: var(--mantel-shadow-card);
+  --shadow-raised: var(--mantel-shadow-raised);
+  --shadow-sheet: var(--mantel-shadow-sheet);
+  --shadow-button: var(--mantel-shadow-button);
+  --shadow-float: var(--mantel-shadow-float);
+  --shadow-pill: var(--mantel-shadow-pill);
+  --shadow-knob: var(--mantel-shadow-knob);
+  --shadow-outline: var(--mantel-shadow-outline);
+  --shadow-selected: var(--mantel-shadow-selected);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-ping-slow: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-map-dash: map-dash 1s linear infinite;
+  --animate-star-pop: star-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-view-in: view-in 0.16s ease-out;
+
+  @keyframes view-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes star-pop {
+    from {
+      transform: scale(0.6);
+    }
+  }
+
+  @keyframes map-dash {
+    to {
+      stroke-dashoffset: -8;
+    }
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    80%,
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+  --mantel-shadow-card: 0 1px 0 white inset, 0 20px 40px -28px rgb(24 24 27 / 0.14);
+  --mantel-shadow-raised: 0 1px 0 white inset, 0 30px 60px -30px rgb(24 24 27 / 0.25), 0 12px 24px -16px rgb(24 24 27 / 0.12);
+  --mantel-shadow-sheet: 0 -24px 48px -24px rgb(24 24 27 / 0.3);
+  --mantel-shadow-button: 0 1px 0 rgb(255 255 255 / 0.15) inset, 0 10px 24px -14px rgb(24 24 27 / 0.6);
+  --mantel-shadow-float: 0 6px 16px -8px rgb(24 24 27 / 0.25);
+  --mantel-shadow-pill: 0 1px 2px rgb(24 24 27 / 0.1);
+  --mantel-shadow-knob: 0 1px 2px rgb(24 24 27 / 0.2);
+  --mantel-shadow-outline: 0 0 0 1px rgb(24 24 27 / 0.08);
+  --mantel-shadow-selected: 0 1px 2px rgb(24 24 27 / 0.06), 0 0 0 1px rgb(24 24 27 / 0.06);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #0c0c0e;
+  --color-surface: #161619;
+  --color-ink: #f2f2f4;
+  --color-on-ink: #111113;
+  --color-scrim: rgb(0 0 0 / 0.6);
+  --color-accent: oklch(0.7 0.14 162);
+  --color-accent-strong: oklch(0.76 0.13 162);
+  --color-accent-soft: oklch(0.3 0.055 162);
+
+  --color-zinc-50: #1c1c20;
+  --color-zinc-100: #242429;
+  --color-zinc-200: #2f2f35;
+  --color-zinc-300: #46464e;
+  --color-zinc-400: #86868f;
+  --color-zinc-500: #a1a1aa;
+  --color-zinc-600: #b9b9c1;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-900: #f2f2f4;
+  --color-zinc-950: #fafafa;
+
+  --color-amber-50: #2a2010;
+  --color-amber-100: #3a2b0f;
+  --color-amber-200: #553c0e;
+  --color-amber-300: #7a5512;
+  --color-amber-400: #d39016;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #fbbf24;
+  --color-amber-700: #fcd34d;
+  --color-amber-800: #fde68a;
+  --color-amber-900: #fef3c7;
+  --color-amber-950: #fffbeb;
+
+  --color-red-50: #2c1416;
+  --color-red-100: #3d1a1d;
+  --color-red-200: #5c2328;
+  --color-red-300: #873138;
+  --color-red-400: #c53b3b;
+  --color-red-500: #ef4444;
+  --color-red-600: #f87171;
+  --color-red-700: #fca5a5;
+  --color-red-800: #fecaca;
+  --color-red-900: #fee2e2;
+  --color-red-950: #fef2f2;
+
+  --color-rose-500: #f43f5e;
+
+  --mantel-shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -28px rgb(0 0 0 / 0.7);
+  --mantel-shadow-raised: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -30px rgb(0 0 0 / 0.8), 0 12px 24px -16px rgb(0 0 0 / 0.5);
+  --mantel-shadow-sheet: 0 -24px 48px -24px rgb(0 0 0 / 0.8);
+  --mantel-shadow-button: 0 1px 0 rgb(255 255 255 / 0.5) inset, 0 10px 24px -14px rgb(0 0 0 / 0.8);
+  --mantel-shadow-float: 0 6px 16px -8px rgb(0 0 0 / 0.7);
+  --mantel-shadow-pill: 0 1px 2px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
+  --mantel-shadow-knob: 0 1px 2px rgb(0 0 0 / 0.5);
+  --mantel-shadow-outline: 0 0 0 1px rgb(255 255 255 / 0.1);
+  --mantel-shadow-selected: 0 1px 2px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-canvas: #0c0c0e;
+    --color-ink: #f2f2f4;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  background-color: var(--color-canvas);
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+}
+
+.app-drag {
+  -webkit-app-region: drag;
+}
+
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.scroll-area {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-zinc-300) transparent;
+}
+
+[data-platform="android"] {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+[data-platform="android"] body {
+  overscroll-behavior: none;
+  -webkit-touch-callout: none;
+}
+
+[data-platform="android"] :is(button, a, label, input, [role="switch"], [role="tab"]) {
+  touch-action: manipulation;
+}
+
+[data-platform="android"] :is(button, a, label, img, [role="switch"], [role="tab"]) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+[data-platform="android"] .scroll-area {
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

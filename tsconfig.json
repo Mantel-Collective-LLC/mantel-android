@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "paths": {
+      "@shared/*": ["./shared/core/*"],
+      "@desktop-main/*": ["./shared/main/*"],
+      "@renderer/*": ["./shared/ui/src/*"]
+    }
+  },
+  "include": ["src/**/*", "shared/core/**/*", "vite.config.ts", "capacitor.config.ts"]
+}
