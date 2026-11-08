@@ -5,7 +5,6 @@ import java.io.Closeable
 import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
-import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
@@ -19,9 +18,11 @@ class ObfsRelay(
         private const val TAG = "MantelObfs"
         const val BACKOFF_START_MS = 1_000L
         const val BACKOFF_MAX_MS = 30_000L
+
+        const val HOST = "127.0.0.1"
     }
 
-    private val udp = DatagramSocket(InetSocketAddress(InetAddress.getLoopbackAddress(), 0))
+    private val udp = DatagramSocket(InetSocketAddress(HOST, 0))
 
     val port: Int = udp.localPort
 

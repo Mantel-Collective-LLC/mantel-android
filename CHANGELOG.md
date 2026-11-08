@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are the Mantel app version
 (`YEAR.MINOR.PATCH`); every release is tagged `v<version>`.
 
+## [2026.0.13] - 2026-11-08
+
+### Changed
+
+- Android: with obfuscation turned on, the app connects properly again, including the quantum-resistant key exchange.
+
 ## [2026.0.12] - 2026-11-08
 
 ### Changed
@@ -112,4 +118,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Quantum-resistant tunnel (beta), location list only when signed in, bug fixes.
 
+[2026.0.13]: https://github.com/Mantel-Collective-LLC/mantel-android/compare/v2026.0.12...v2026.0.13
 [2026.0.12]: https://github.com/Mantel-Collective-LLC/mantel-android/releases/tag/v2026.0.12

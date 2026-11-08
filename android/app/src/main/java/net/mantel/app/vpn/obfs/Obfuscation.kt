@@ -60,7 +60,7 @@ object Obfuscation {
             Peer.Builder()
                 .setPublicKey(src.publicKey)
                 .addAllowedIps(src.allowedIps)
-                .setEndpoint(InetEndpoint.parse("127.0.0.1:$port"))
+                .setEndpoint(InetEndpoint.parse("${ObfsRelay.HOST}:$port"))
                 .setPersistentKeepalive(KEEPALIVE_SECONDS)
                 .apply { src.preSharedKey.ifPresent { setPreSharedKey(it) } }
                 .build()

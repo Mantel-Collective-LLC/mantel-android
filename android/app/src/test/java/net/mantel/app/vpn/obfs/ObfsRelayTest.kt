@@ -124,7 +124,7 @@ class ObfsRelayTest {
         val buf = ByteArray(2048)
         wg.soTimeout = 300
         while (System.currentTimeMillis() < deadline) {
-            wg.send(DatagramPacket(payload, payload.size, InetSocketAddress(InetAddress.getLoopbackAddress(), relayPort)))
+            wg.send(DatagramPacket(payload, payload.size, InetSocketAddress(ObfsRelay.HOST, relayPort)))
             val packet = DatagramPacket(buf, buf.size)
             try {
                 wg.receive(packet)
