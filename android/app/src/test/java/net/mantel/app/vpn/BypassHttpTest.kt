@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 
 class BypassHttpTest {
+
     @Test
     fun acceptsOnlyPlainHttpAndHttpsUrls() {
         assertNotNull(BypassHttp.parseUrl("https://api.example.net/api/v1/account"))

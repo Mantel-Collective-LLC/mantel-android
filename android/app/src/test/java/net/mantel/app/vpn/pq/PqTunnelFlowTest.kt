@@ -22,6 +22,7 @@ import java.net.InetAddress
 import java.security.SecureRandom
 
 class PqTunnelFlowTest {
+
     companion object {
         const val CLIENT_PRIVATE = "pSR7d2h8H6wS0RjX9z/ftpIAVDAsuu/flQQStRtweZ0="
         const val CLIENT_PUBLIC = "pLLGZN3M20E9HOfCw9BTwB1UWPNJLHZEkJS0Bi4uKxw="

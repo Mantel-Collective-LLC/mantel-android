@@ -13,6 +13,7 @@ import android.util.Log
 import net.mantel.app.R
 
 class MantelTileService : TileService() {
+
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listener: (TunnelStatus) -> Unit = { _ -> mainHandler.post { render() } }
 

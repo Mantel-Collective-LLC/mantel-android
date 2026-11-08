@@ -39,6 +39,7 @@ import java.util.concurrent.Executors
     permissions = [Permission(alias = MantelVpnPlugin.NOTIFICATIONS, strings = [Manifest.permission.POST_NOTIFICATIONS])],
 )
 class MantelVpnPlugin : Plugin() {
+
     companion object {
         const val EVENT_STATUS = "status"
         const val EVENT_SYSTEM_THEME = "systemTheme"

@@ -20,6 +20,7 @@ import java.security.MessageDigest
 import java.util.Base64
 
 class PqVectorsTest {
+
     private fun b64(s: String) = Base64.getDecoder().decode(s)
 
     @Test

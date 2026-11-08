@@ -6,6 +6,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OpenWifiWatcherTest {
+
     @Test
     fun classifiesTheSecurityType() {
         assertEquals(OpenWifiWatcher.UNKNOWN, OpenWifiWatcher.classify(null))

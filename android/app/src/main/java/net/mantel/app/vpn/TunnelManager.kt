@@ -120,6 +120,7 @@ data class SavedTunnel(
 class TunnelException(val code: String, message: String, cause: Throwable? = null) : Exception(message, cause)
 
 class TunnelManager private constructor(context: Context) {
+
     companion object {
         private const val TAG = "MantelTunnel"
         private const val TUNNEL_NAME = "mantel"

@@ -142,7 +142,6 @@ tasks.register('checkReleaseSigning') {
     }
 }
 tasks.register('checkWebFlavorDebug') { doLast { checkWebFlavor('debug', false) } }
-
 tasks.configureEach { task ->
     if (task.name == 'preReleaseBuild') task.dependsOn('checkWebFlavorRelease', 'checkReleaseSigning')
     if (task.name == 'preDebugBuild') task.dependsOn('checkWebFlavorDebug')

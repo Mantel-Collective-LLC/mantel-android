@@ -7,6 +7,7 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class AppIconTest {
+
     private fun source(path: String): String = File("src/main/java/net/mantel/app/$path").readText()
 
     private val switches = Regex("""(?m)^[^/*]*AppIcon\.(set|refreshForLanguage)\(""")

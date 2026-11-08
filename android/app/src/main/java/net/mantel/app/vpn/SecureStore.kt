@@ -14,6 +14,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 class SecureStore(context: Context, prefsName: String) {
+
     companion object {
         private const val TAG = "MantelSecureStore"
         private const val KEYSTORE = "AndroidKeyStore"
