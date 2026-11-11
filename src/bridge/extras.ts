@@ -1,9 +1,9 @@
 import type { MantelBridge, Result, SessionInfo } from "@shared/contract";
 
-export type CreatedAccount = { code: string; accountId: string; paidUntil: string };
+export type CreatedAccount = { code: string; accountId: string; paidUntil: string; referralDays?: number | null };
 
 export type AndroidBridgeExtras = {
-  register: () => Promise<Result<CreatedAccount>>;
+  register: (referralCode?: string) => Promise<Result<CreatedAccount>>;
   pendingRegistration: () => Promise<CreatedAccount | null>;
   confirmRegistration: () => Promise<Result<SessionInfo>>;
 };

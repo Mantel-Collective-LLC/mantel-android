@@ -13,12 +13,14 @@ type CopyState = "idle" | "copied" | "failed";
 export function RegistrationReveal({
   bridge,
   code,
+  referralDays = null,
   pending,
   error,
   onContinue,
 }: {
   bridge: MantelBridge;
   code: string;
+  referralDays?: number | null;
   pending: boolean;
   error: string | null;
   onContinue: () => void;
@@ -50,6 +52,9 @@ export function RegistrationReveal({
       <p className="text-xs font-medium text-accent-strong">{t.register.eyebrow}</p>
       <h1 className="mt-3 text-[30px] font-medium leading-[1.05] tracking-[-0.04em] text-balance">{t.register.title}</h1>
       <p className="mt-3 text-[14.5px] leading-relaxed text-zinc-600">{t.register.body}</p>
+      {referralDays !== null && (
+        <p className="mt-3 text-[14px] font-medium text-accent-strong">{format(t.register.inviteAdded, { days: referralDays })}</p>
+      )}
 
       <div className="mt-7 rounded-3xl border border-zinc-200/80 bg-surface p-5 shadow-card">
         <p className="text-xs font-medium text-zinc-400">{t.register.heading}</p>

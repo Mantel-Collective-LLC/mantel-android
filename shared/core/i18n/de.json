@@ -167,6 +167,9 @@
     "createAccount": "Konto erstellen",
     "creatingAccount": "Erzeuge Nummer",
     "registerRateLimited": "Zu viele neue Konten in kurzer Zeit. Versuch es später erneut.",
+    "inviteToggle": "Einladungscode eingeben",
+    "inviteLabel": "Einladungscode (optional)",
+    "invitePlaceholder": "z. B. FREUNDE7",
     "openDebug": "Debug-Optionen",
     "firewallActive": "Der dauerhafte Kill Switch ist aktiv. Außer Mantel ist das Internet gesperrt, bis du dich verbindest oder ihn im Tray-Menü aufhebst.",
     "totpTitle": "Code der Zwei-Faktor-Anmeldung",
@@ -490,7 +493,8 @@
     "warning": "Diese Nummer ist der einzige Weg, dich einzuloggen. Wir kennen sie nicht, wir speichern nur einen Hash davon. Geht sie verloren, kann niemand sie wiederherstellen, auch wir nicht.",
     "confirm": "Ich habe meine Kontonummer gespeichert",
     "continue": "Weiter",
-    "continuing": "Melde an"
+    "continuing": "Melde an",
+    "inviteAdded": "Einladungscode eingelöst: {days} Tage Laufzeit geschenkt."
   },
   "debug": {
     "badge": "DEBUG",
@@ -695,7 +699,14 @@
     "limitNote": "Pro Gerät höchstens {max}. Mehr erlaubt der Server derzeit nicht.",
     "hint": "Im Torrent-Programm den Port als eingehenden Port eintragen, UPnP/NAT-PMP ausschalten und das Programm an die VPN-Schnittstelle binden.",
     "warning": "Über einen offenen Port ist das Gerät aus dem Internet erreichbar. Öffne Ports nur, solange du sie brauchst.",
-    "switchNote": "Beim Standortwechsel bekommt das Gerät einen neuen Port; der alte wird frei."
+    "switchNote": "Beim Standortwechsel bekommt das Gerät einen neuen Port; der alte wird frei.",
+    "localPort": "Lokaler Port (optional)",
+    "localPortPlaceholder": "Wie öffentlich",
+    "localPortHelp": "Der Port, auf dem dein Programm lauscht, z. B. 3000. Leer lassen für den öffentlichen Port.",
+    "localPortInvalid": "Gib eine ganze Zahl von 1 bis 65535 ein.",
+    "listenHint": "Das Programm auf deinem Gerät muss auf 0.0.0.0 (alle Schnittstellen) lauschen, nicht nur auf 127.0.0.1.",
+    "localPortFor": "Lokaler Port für {port}",
+    "save": "Speichern"
   },
   "proxies": {
     "title": "Proxys",
@@ -788,6 +799,8 @@
     "apiUnknownCode": "Diese Kontonummer kennen wir nicht.",
     "apiTotpRequired": "Gib den Code aus deiner Authenticator-App ein.",
     "apiTotpInvalid": "Der Code stimmt nicht oder wurde schon benutzt. Warte auf den nächsten Code in der App.",
+    "apiInvalidReferralCode": "Ein Einladungscode hat 3 bis 32 Buchstaben, Ziffern oder Bindestriche.",
+    "apiReferralUnavailable": "Diesen Einladungscode gibt es nicht, oder er ist abgelaufen oder aufgebraucht. Entferne ihn, um das Konto ohne Code zu erstellen.",
     "apiAccountNotFound": "Dieses Konto gibt es nicht mehr.",
     "apiRateLimitedMinute": "Zu viele Versuche. Warte eine Minute.",
     "apiAccountExpired": "Dein Konto hat keine Laufzeit. Kaufe Zeit oder löse zuerst einen Gutschein ein, dann kannst du Geräte hinzufügen.",
@@ -812,6 +825,9 @@
     "apiPortForwardLimitGeneric": "Du hast schon so viele weitergeleitete Ports wie erlaubt. Schalte zuerst einen ab.",
     "apiPortForwardingFull": "{city} hat keine freien Ports mehr für Weiterleitungen. Versuch einen anderen Standort.",
     "apiPortForwardNotFound": "Diesen weitergeleiteten Port gibt es nicht mehr.",
+    "apiLocalPortInvalid": "Der lokale Port muss eine ganze Zahl von 1 bis 65535 sein.",
+    "apiLocalPortUnsupported": "{city} kann noch nicht an einen anderen lokalen Port weiterleiten. Lass das Feld leer.",
+    "apiLocalPortUnsupportedGeneric": "Dieser Standort kann noch nicht an einen anderen lokalen Port weiterleiten. Lass das Feld leer.",
     "apiTorUnavailable": "{city} bietet Tor gerade nicht an.",
     "apiTorUnavailableGeneric": "Dieser Standort bietet Tor gerade nicht an.",
     "apiProxyLimit": "Höchstens {max} Proxys pro Konto. Lösche zuerst einen.",

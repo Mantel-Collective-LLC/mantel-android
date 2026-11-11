@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { ArrowLeftIcon, ArrowRightIcon, ShieldWarningIcon, UserPlusIcon } from "@phosphor-icons/react";
 import type { MantelBridge, Preferences, SessionInfo } from "@shared/contract";
 import { useI18n } from "@renderer/i18n/context";
+import { InviteCodeField } from "@renderer/ui/invite-field";
 import { Button, CodeInput, InlineError, SPRING, TotpInput, totpComplete } from "@renderer/ui/primitives";
 import { androidExtras, type CreatedAccount } from "../bridge/extras";
 import { DebugLoginFooter } from "../debug/login-footer";
@@ -22,7 +23,7 @@ export function LoginScreen({
   onPreferences: (next: Preferences) => void;
   onLoggedIn: (session: SessionInfo) => void;
 }) {
-  const { t, language } = useI18n();
+  const { t, language, format } = useI18n();
   const texts = androidStrings(language);
   const extras = androidExtras(bridge);
   const [digits, setDigits] = useState("");
@@ -32,6 +33,7 @@ export function LoginScreen({
   const [created, setCreated] = useState<CreatedAccount | null>(null);
   const [registering, setRegistering] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
+  const [referral, setReferral] = useState("");
   const [confirming, setConfirming] = useState(false);
   const [confirmError, setConfirmError] = useState<string | null>(null);
 
@@ -76,7 +78,7 @@ export function LoginScreen({
     setRegistering(true);
     setRegisterError(null);
     try {
-      const result = await extras.register();
+      const result = await extras.register(referral === "" ? undefined : referral);
       if (!result.ok) {
         setRegisterError(result.error);
         return;
@@ -122,6 +124,9 @@ export function LoginScreen({
           <p className="text-xs font-medium text-accent-strong">{texts.reveal.eyebrow}</p>
           <h1 className="mt-3 text-[30px] font-medium leading-[1.05] tracking-[-0.04em] text-balance">{texts.reveal.title}</h1>
           <p className="mb-7 mt-3 text-[14.5px] leading-relaxed text-zinc-600">{texts.reveal.body}</p>
+          {created.referralDays ? (
+            <p className="-mt-4 mb-7 text-[14px] font-medium text-accent-strong">{format(t.register.inviteAdded, { days: created.referralDays })}</p>
+          ) : null}
           <CodeReveal
             code={created.code}
             texts={texts.reveal}
@@ -215,6 +220,14 @@ export function LoginScreen({
                 </Button>
               </div>
               <p className="mt-2 text-[12.5px] leading-relaxed text-zinc-400">{texts.register.hint}</p>
+              <InviteCodeField
+                value={referral}
+                disabled={registering}
+                onChange={(value) => {
+                  setReferral(value);
+                  if (registerError) setRegisterError(null);
+                }}
+              />
               <InlineError message={registerError} className="mt-3" />
             </div>
           )}

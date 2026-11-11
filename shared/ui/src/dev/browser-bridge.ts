@@ -171,7 +171,8 @@ export function createBrowserBridge(): MantelBridge {
       available,
       reason: available ? null : node.online ? "unsupported" : "offline",
       max: 1,
-      forwards: port ? [{ port, host: node.endpointHost }] : [],
+      localPort: false,
+      forwards: port ? [{ port, host: node.endpointHost, localPort: null }] : [],
     };
   }
 
@@ -395,21 +396,21 @@ export function createBrowserBridge(): MantelBridge {
       pendingRegistration = null;
       return { ok: true, value: session };
     },
-    register: async () => {
+    register: async (referralCode) => {
       if (params.get("registerfail") === "1") {
         return { ok: false, error: "Zu viele neue Konten in kurzer Zeit. Versuch es später erneut.", code: "rate_limited" };
       }
-      const result = await call<{ code: string; token: string; account: { id: string; paidUntil: string } }>(
+      const result = await call<{ code: string; token: string; account: { id: string; paidUntil: string }; referralDays?: number }>(
         "POST",
         "/api/v1/auth/register",
-        {},
+        referralCode ? { referralCode } : {},
       );
       if (!result.ok) return result;
       pendingRegistration = {
         token: result.value.token,
         session: { loggedIn: true, accountId: result.value.account.id, paidUntil: result.value.account.paidUntil },
       };
-      return { ok: true, value: { code: result.value.code } };
+      return { ok: true, value: { code: result.value.code, referralDays: result.value.referralDays ?? null } };
     },
     confirmRegistration: async () => {
       if (!pendingRegistration) return { ok: false, error: errors().registrationMissing, code: "invalid" };
@@ -461,8 +462,15 @@ export function createBrowserBridge(): MantelBridge {
     },
     devicePortForwarding: (id) =>
       call<PortForwardingState | null>("GET", `/api/v1/devices/${encodeURIComponent(id)}/port-forwarding`, undefined, { notFoundAsNull: true }),
-    addPortForward: (id) =>
-      call<PortForwardingState | null>("POST", `/api/v1/devices/${encodeURIComponent(id)}/port-forwarding`, {}, { notFoundAsNull: true }),
+    addPortForward: (id, localPort) =>
+      call<PortForwardingState | null>(
+        "POST",
+        `/api/v1/devices/${encodeURIComponent(id)}/port-forwarding`,
+        localPort == null ? {} : { localPort },
+        { notFoundAsNull: true },
+      ),
+    setPortForwardLocalPort: (id, port, localPort) =>
+      call<PortForwardingState | null>("PATCH", `/api/v1/devices/${encodeURIComponent(id)}/port-forwarding/${port}`, { localPort }, { notFoundAsNull: false }),
     removePortForward: (id, port) =>
       call<PortForwardingState | null>("DELETE", `/api/v1/devices/${encodeURIComponent(id)}/port-forwarding/${port}`, undefined, {
         notFoundAsNull: false,

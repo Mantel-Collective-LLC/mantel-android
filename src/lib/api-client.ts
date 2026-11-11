@@ -298,8 +298,8 @@ export class ApiClient {
     return this.request("POST", "/api/v1/auth/login", { body: { code, totp: totp ?? null }, schema: loginSchema });
   }
 
-  register() {
-    return this.request("POST", "/api/v1/auth/register", { body: {}, schema: registerSchema, expect: [200, 201] });
+  register(referralCode?: string) {
+    return this.request("POST", "/api/v1/auth/register", { body: referralCode ? { referralCode } : {}, schema: registerSchema, expect: [200, 201] });
   }
 
   logout() {
@@ -386,23 +386,32 @@ export class ApiClient {
     });
   }
 
-  async portForwarding(deviceId: string, action: "get" | "enable" | "disable" = "get", port?: number): Promise<PortForwardingState> {
-    const one = action === "disable" && port !== undefined;
+  async portForwarding(
+    deviceId: string,
+    action: "get" | "enable" | "disable" | "local" = "get",
+    port?: number,
+    localPort: number | null = null,
+  ): Promise<PortForwardingState> {
+    const one = (action === "disable" || action === "local") && port !== undefined;
     const route = `/api/v1/devices/${encodeURIComponent(deviceId)}/port-forwarding${one ? `/${port}` : ""}`;
     const template = `/api/v1/devices/:id/port-forwarding${one ? "/:port" : ""}`;
     const body =
       action === "get"
         ? await this.request("GET", route, { auth: true, schema: portForwardingSchema, template })
         : action === "enable"
-          ? await this.request("POST", route, { auth: true, body: {}, schema: portForwardingSchema, expect: [201, 200], template })
-          : await this.request("DELETE", route, { auth: true, schema: portForwardingSchema, template });
+          ?
+            await this.request("POST", route, { auth: true, body: localPort === null ? {} : { localPort }, schema: portForwardingSchema, expect: [201, 200], template })
+          : action === "local"
+            ? await this.request("PATCH", route, { auth: true, body: { localPort }, schema: portForwardingSchema, expect: [200], template })
+            : await this.request("DELETE", route, { auth: true, schema: portForwardingSchema, template });
     return {
       nodeId: body.nodeId,
       city: body.city,
       available: body.available,
       reason: body.reason,
       max: body.max,
-      forwards: body.forwards.map((forward) => ({ port: forward.port, host: forward.host })),
+      localPort: body.localPort ?? false,
+      forwards: body.forwards.map((forward) => ({ port: forward.port, host: forward.host, localPort: forward.localPort ?? null })),
     };
   }
 

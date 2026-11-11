@@ -9,7 +9,7 @@ async function setup() {
   const log: CallLog = [];
   const vpn = fakeVpn(log);
   const server = fakeServer(log);
-  const ports = new Map<string, number[]>();
+  const ports = new Map<string, { port: number; localPort: number | null }[]>();
   const view = (deviceId: string) => ({
     deviceId,
     nodeId: "fra",
@@ -17,7 +17,8 @@ async function setup() {
     available: true,
     reason: null,
     max: 2,
-    forwards: (ports.get(deviceId) ?? []).map((port) => ({ port, host: "198.51.100.7" })),
+    localPort: true,
+    forwards: (ports.get(deviceId) ?? []).map(({ port, localPort }) => ({ port, host: "198.51.100.7", localPort })),
   });
   const forwarding = (request: Request) => {
     const match = /^\/api\/v1\/devices\/([\w-]+)\/port-forwarding(?:\/(\d+))?$/.exec(request.path);
@@ -25,11 +26,13 @@ async function setup() {
     if (!id) return undefined;
     if (!server.devices.some((device) => device.id === id)) return { status: 404, body: { code: "device_not_found", error: "Device not found." } };
     const list = ports.get(id) ?? [];
+    const localPort = (request.body as { localPort?: number | null } | undefined)?.localPort ?? null;
     if (request.method === "POST") {
-      ports.set(id, [...list, 41234 + list.length]);
+      ports.set(id, [...list, { port: 41234 + list.length, localPort }]);
       return { status: 201, body: view(id) };
     }
-    if (request.method === "DELETE") ports.set(id, match[2] ? list.filter((port) => port !== Number(match[2])) : []);
+    if (request.method === "PATCH") ports.set(id, list.map((entry) => (entry.port === Number(match[2]) ? { ...entry, localPort } : entry)));
+    if (request.method === "DELETE") ports.set(id, match[2] ? list.filter((entry) => entry.port !== Number(match[2])) : []);
     return { status: 200, body: view(id) };
   };
   const { bridge, controller } = createAndroidBridgeWithController({
@@ -133,7 +136,7 @@ describe("device management bridge", () => {
     const two = await bridge.addPortForward!("other1");
     expect(two.ok && two.value?.forwards.map((forward) => forward.port)).toEqual([41234, 41235]);
     const one = await bridge.removePortForward!("other1", 41234);
-    expect(one.ok && one.value?.forwards).toEqual([{ port: 41235, host: "198.51.100.7" }]);
+    expect(one.ok && one.value?.forwards).toEqual([{ port: 41235, host: "198.51.100.7", localPort: null }]);
     expect(log).toEqual([
       "api GET /api/v1/devices/other1/port-forwarding",
       "api POST /api/v1/devices/other1/port-forwarding",
@@ -145,5 +148,29 @@ describe("device management bridge", () => {
       expect((await bridge.removePortForward!("other1", port as number)).ok).toBe(false);
     }
     expect((await bridge.addPortForward!("../x")).ok).toBe(false);
+  });
+
+  it("port forwards with a local port (agent 2.13): POST {localPort}, PATCH changes it, {} without one", async () => {
+    const { bridge, server } = await setup();
+    server.devices.push({ id: "other1", name: "Phone", nodeId: "fra", ipv4: "10.64.0.99", publicKey: "x" });
+    const added = await bridge.addPortForward!("other1", 3000);
+    expect(added.ok && added.value?.localPort).toBe(true);
+    expect(added.ok && added.value?.forwards).toEqual([{ port: 41234, host: "198.51.100.7", localPort: 3000 }]);
+    const changed = await bridge.setPortForwardLocalPort!("other1", 41234, 8080);
+    expect(changed.ok && changed.value?.forwards[0]?.localPort).toBe(8080);
+    const reset = await bridge.setPortForwardLocalPort!("other1", 41234, null);
+    expect(reset.ok && reset.value?.forwards[0]?.localPort).toBeNull();
+    await bridge.addPortForward!("other1");
+    const bodies = server.requests.filter((request) => request.path.startsWith("/api/v1/devices/other1/port-forwarding") && request.method !== "GET");
+    expect(bodies.map((request) => [request.method, request.path, request.body])).toEqual([
+      ["POST", "/api/v1/devices/other1/port-forwarding", { localPort: 3000 }],
+      ["PATCH", "/api/v1/devices/other1/port-forwarding/41234", { localPort: 8080 }],
+      ["PATCH", "/api/v1/devices/other1/port-forwarding/41234", { localPort: null }],
+      ["POST", "/api/v1/devices/other1/port-forwarding", {}],
+    ]);
+    for (const bad of [0, 65536, 1.5, "3000"]) {
+      expect((await bridge.addPortForward!("other1", bad as number)).ok).toBe(false);
+      expect((await bridge.setPortForwardLocalPort!("other1", 41234, bad as number)).ok).toBe(false);
+    }
   });
 });

@@ -13,9 +13,11 @@ import {
   deviceNameSchema,
   excludedAppsSchema,
   forwardPortSchema,
+  localPortSchema,
   nodeIdSchema,
   obfuscationModeSchema,
   settingsPatchSchema,
+  referralInputSchema,
   totpInputSchema,
 } from "../lib/schemas";
 import { androidStrings } from "../i18n/strings";
@@ -136,10 +138,12 @@ export function createAndroidBridgeWithController(options: AndroidBridgeOptions 
       return wrap(() => controller.login(parsed.data, second.data ?? undefined));
     },
 
-    register: async () => {
+    register: async (referralCode?: unknown) => {
+      const parsed = referralInputSchema.safeParse(referralCode === undefined ? null : referralCode);
+      if (!parsed.success) return { ok: false, error: androidStrings(controller.language()).register.failed, code: "invalid" };
       await ready;
       try {
-        return { ok: true, value: await controller.register() };
+        return { ok: true, value: await controller.register(parsed.data ?? undefined) };
       } catch (error) {
         return { ok: false, error: registerError(error), code: codeOf(error) };
       }
@@ -254,11 +258,20 @@ export function createAndroidBridgeWithController(options: AndroidBridgeOptions 
       await ready;
       return wrap(() => controller.devicePortForwarding(parsed.data));
     },
-    addPortForward: async (deviceId) => {
+    addPortForward: async (deviceId, localPort) => {
       const parsed = deviceIdSchema.safeParse(deviceId);
-      if (!parsed.success) return invalid();
+      const parsedLocal = localPortSchema.safeParse(localPort ?? null);
+      if (!parsed.success || !parsedLocal.success) return invalid();
       await ready;
-      return wrap(() => controller.addPortForward(parsed.data));
+      return wrap(() => controller.addPortForward(parsed.data, parsedLocal.data));
+    },
+    setPortForwardLocalPort: async (deviceId, port, localPort) => {
+      const parsedId = deviceIdSchema.safeParse(deviceId);
+      const parsedPort = forwardPortSchema.safeParse(port);
+      const parsedLocal = localPortSchema.safeParse(localPort);
+      if (!parsedId.success || !parsedPort.success || !parsedLocal.success) return invalid();
+      await ready;
+      return wrap(() => controller.setPortForwardLocalPort(parsedId.data, parsedPort.data, parsedLocal.data));
     },
     removePortForward: async (deviceId, port) => {
       const parsedId = deviceIdSchema.safeParse(deviceId);

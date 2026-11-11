@@ -1178,12 +1178,25 @@ describe("register (Konto erstellen)", () => {
     });
   }
 
+  it("sends an invite code and returns its days; refuses malformed input before calling the server", async () => {
+    const { bridge, server } = await setup();
+    server.override.set("POST /api/v1/auth/register", (request) => {
+      expect(request.body).toEqual({ referralCode: "FREUNDE7" });
+      return {
+        status: 200,
+        body: { code: NEW_CODE, token: NEW_TOKEN, account: { id: "acc2", paidUntil: "2026-11-17T12:00:00.000Z" }, referralDays: 7 },
+      };
+    });
+    expect(await bridge.register("FREUNDE7")).toMatchObject({ ok: true, value: { code: NEW_CODE, referralDays: 7 } });
+    expect(await bridge.register("<script>" as string)).toMatchObject({ ok: false, code: "invalid" });
+  });
+
   it("creates an account, keeps it pending until the code is confirmed, then logs it in", async () => {
     const { bridge, server, vpn, prefs } = await setup();
     withRegister(server);
     expect(await bridge.register()).toEqual({
       ok: true,
-      value: { code: NEW_CODE, accountId: "acc2", paidUntil: "2026-10-29T00:00:00.000Z" },
+      value: { code: NEW_CODE, accountId: "acc2", paidUntil: "2026-10-29T00:00:00.000Z", referralDays: null },
     });
     expect(await bridge.session()).toMatchObject({ loggedIn: false });
     expect(await bridge.pendingRegistration()).toMatchObject({ code: NEW_CODE });

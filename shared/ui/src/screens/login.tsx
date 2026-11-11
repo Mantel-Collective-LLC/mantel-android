@@ -5,6 +5,7 @@ import type { MantelBridge, Preferences, SessionInfo } from "../../../core/contr
 import { useI18n } from "../i18n/context";
 import { IS_DEBUG } from "../lib/flavor";
 import { Button, CodeInput, InlineError, SPRING, TotpInput, totpComplete } from "../ui/primitives";
+import { InviteCodeField } from "../ui/invite-field";
 import { RegistrationReveal } from "./register";
 
 export function LoginScreen({
@@ -28,6 +29,8 @@ export function LoginScreen({
   const [registering, setRegistering] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [newCode, setNewCode] = useState<string | null>(null);
+  const [referral, setReferral] = useState("");
+  const [referralDays, setReferralDays] = useState<number | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const canRegister = Boolean(bridge.register && bridge.confirmRegistration);
@@ -57,12 +60,13 @@ export function LoginScreen({
     if (!bridge.register) return;
     setRegistering(true);
     setRegisterError(null);
-    const result = await bridge.register();
+    const result = await bridge.register(referral === "" ? undefined : referral);
     setRegistering(false);
     if (!result.ok) {
       setRegisterError(result.code === "rate_limited" ? t.login.registerRateLimited : result.error);
       return;
     }
+    setReferralDays(result.value.referralDays ?? null);
     setNewCode(result.value.code);
   };
 
@@ -84,6 +88,7 @@ export function LoginScreen({
       <RegistrationReveal
         bridge={bridge}
         code={newCode}
+        referralDays={referralDays}
         pending={confirming}
         error={confirmError}
         onContinue={() => void confirmRegistration()}
@@ -167,6 +172,14 @@ export function LoginScreen({
               {registering ? t.login.creatingAccount : t.login.createAccount}
             </Button>
           </div>
+          <InviteCodeField
+            value={referral}
+            disabled={registering}
+            onChange={(value) => {
+              setReferral(value);
+              if (registerError) setRegisterError(null);
+            }}
+          />
           <InlineError message={registerError} className="mt-3" />
         </div>
       )}

@@ -794,9 +794,9 @@ export class AndroidVpnController {
     });
   }
 
-  register(): Promise<{ code: string; accountId: string; paidUntil: string }> {
+  register(referralCode?: string): Promise<{ code: string; accountId: string; paidUntil: string; referralDays: number | null }> {
     return this.serialize(async () => {
-      const response = await this.api.register();
+      const response = await this.api.register(referralCode);
       this.pending = {
         code: response.code,
         token: response.token,
@@ -804,7 +804,7 @@ export class AndroidVpnController {
         paidUntil: response.account.paidUntil,
       };
       await this.savePending();
-      return { code: response.code, accountId: response.account.id, paidUntil: response.account.paidUntil };
+      return { code: response.code, accountId: response.account.id, paidUntil: response.account.paidUntil, referralDays: response.referralDays ?? null };
     });
   }
 
@@ -1069,17 +1069,26 @@ export class AndroidVpnController {
     return this.forwardingOf(deviceId, "get");
   }
 
-  addPortForward(deviceId: string): Promise<PortForwardingState | null> {
-    return this.forwardingOf(deviceId, "enable");
+  addPortForward(deviceId: string, localPort: number | null = null): Promise<PortForwardingState | null> {
+    return this.forwardingOf(deviceId, "enable", undefined, localPort);
+  }
+
+  setPortForwardLocalPort(deviceId: string, port: number, localPort: number | null): Promise<PortForwardingState | null> {
+    return this.forwardingOf(deviceId, "local", port, localPort);
   }
 
   removePortForward(deviceId: string, port: number): Promise<PortForwardingState | null> {
     return this.forwardingOf(deviceId, "disable", port);
   }
 
-  private async forwardingOf(deviceId: string, action: "get" | "enable" | "disable", port?: number): Promise<PortForwardingState | null> {
+  private async forwardingOf(
+    deviceId: string,
+    action: "get" | "enable" | "disable" | "local",
+    port?: number,
+    localPort: number | null = null,
+  ): Promise<PortForwardingState | null> {
     try {
-      return await this.authed(() => this.api.portForwarding(deviceId, action, port));
+      return await this.authed(() => this.api.portForwarding(deviceId, action, port, localPort));
     } catch (error) {
       if (error instanceof ApiError && error.apiCode === "device_not_found") return null;
       throw error;

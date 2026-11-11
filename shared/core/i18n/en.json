@@ -167,6 +167,9 @@
     "createAccount": "Create account",
     "creatingAccount": "Generating number",
     "registerRateLimited": "Too many new accounts in a short time. Please try again later.",
+    "inviteToggle": "Enter an invite code",
+    "inviteLabel": "Invite code (optional)",
+    "invitePlaceholder": "e.g. FRIENDS7",
     "openDebug": "Debug options",
     "firewallActive": "The permanent kill switch is on. Apart from Mantel the internet is blocked until you connect or lift it in the tray menu.",
     "totpTitle": "Two-factor code",
@@ -490,7 +493,8 @@
     "warning": "This number is the only way to sign in. We don't know it; we only store a hash of it. If you lose it, nobody can recover it, not even us.",
     "confirm": "I've saved my account number",
     "continue": "Continue",
-    "continuing": "Signing in"
+    "continuing": "Signing in",
+    "inviteAdded": "Invite code applied: {days} days of VPN time added."
   },
   "debug": {
     "badge": "DEBUG",
@@ -695,7 +699,14 @@
     "limitNote": "At most {max} per device. The server does not allow more at the moment.",
     "hint": "In your torrent program, enter the port as the incoming (listening) port, turn off UPnP/NAT-PMP and bind the program to the VPN interface.",
     "warning": "An open port makes the device reachable from the internet. Keep ports open only while you need them.",
-    "switchNote": "When the device switches location, it gets a new port and the old one is released."
+    "switchNote": "When the device switches location, it gets a new port and the old one is released.",
+    "localPort": "Local port (optional)",
+    "localPortPlaceholder": "Same as public",
+    "localPortHelp": "The port your program listens on, e.g. 3000. Leave empty to use the public port.",
+    "localPortInvalid": "Enter a whole number from 1 to 65535.",
+    "listenHint": "The program on your device must listen on 0.0.0.0 (all interfaces), not only on 127.0.0.1.",
+    "localPortFor": "Local port for {port}",
+    "save": "Save"
   },
   "proxies": {
     "title": "Proxies",
@@ -788,6 +799,8 @@
     "apiUnknownCode": "We don’t know this account number.",
     "apiTotpRequired": "Enter the code from your authenticator app.",
     "apiTotpInvalid": "That code is wrong or was already used. Wait for the next code in your app.",
+    "apiInvalidReferralCode": "An invite code has 3 to 32 letters, digits or dashes.",
+    "apiReferralUnavailable": "This invite code is unknown, expired or used up. Remove it to create the account without it.",
     "apiAccountNotFound": "This account no longer exists.",
     "apiRateLimitedMinute": "Too many attempts. Wait a minute.",
     "apiAccountExpired": "Your account has no paid time. Buy time or redeem a voucher first, then you can add devices.",
@@ -812,6 +825,9 @@
     "apiPortForwardLimitGeneric": "You already have as many forwarded ports as allowed. Switch one off first.",
     "apiPortForwardingFull": "{city} has no free ports for forwarding left. Try another location.",
     "apiPortForwardNotFound": "This forwarded port no longer exists.",
+    "apiLocalPortInvalid": "The local port must be a whole number from 1 to 65535.",
+    "apiLocalPortUnsupported": "{city} cannot forward to another local port yet. Leave the field empty.",
+    "apiLocalPortUnsupportedGeneric": "This location cannot forward to another local port yet. Leave the field empty.",
     "apiTorUnavailable": "{city} does not offer Tor right now.",
     "apiTorUnavailableGeneric": "This location does not offer Tor right now.",
     "apiProxyLimit": "At most {max} proxies per account. Delete one first.",

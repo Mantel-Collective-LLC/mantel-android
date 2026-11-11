@@ -74,9 +74,9 @@ describe("port forwarding bridge", () => {
     expect((await bridge.connect("fra")).ok).toBe(true);
     const deviceId = server.devices[0]!.id;
     log.length = 0;
-    expect(await bridge.portForwarding!()).toEqual({ ok: true, value: { nodeId: "fra", city: "Frankfurt", available: true, reason: null, max: 1, forwards: [] } });
+    expect(await bridge.portForwarding!()).toEqual({ ok: true, value: { nodeId: "fra", city: "Frankfurt", available: true, reason: null, max: 1, localPort: false, forwards: [] } });
     const on = await bridge.setPortForwarding!(true);
-    expect(on).toEqual({ ok: true, value: { nodeId: "fra", city: "Frankfurt", available: true, reason: null, max: 1, forwards: [{ port: 41234, host: "198.51.100.7" }] } });
+    expect(on).toEqual({ ok: true, value: { nodeId: "fra", city: "Frankfurt", available: true, reason: null, max: 1, localPort: false, forwards: [{ port: 41234, host: "198.51.100.7", localPort: null }] } });
     const off = await bridge.setPortForwarding!(false);
     expect(off.ok && off.value?.forwards).toEqual([]);
     expect(log.filter((entry) => entry.includes("port-forwarding"))).toEqual([

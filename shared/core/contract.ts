@@ -122,7 +122,7 @@ export type ObfuscationMode = (typeof OBFUSCATION_MODES)[number];
 export const PORT_FORWARD_REASONS = ["unsupported", "disabled", "expired", "offline", "tor"] as const;
 export type PortForwardReason = (typeof PORT_FORWARD_REASONS)[number];
 
-export type PortForward = { port: number; host: string };
+export type PortForward = { port: number; host: string; localPort: number | null };
 
 export type PortForwardingState = {
   nodeId: string;
@@ -130,6 +130,7 @@ export type PortForwardingState = {
   available: boolean;
   reason: PortForwardReason | null;
   max: number;
+  localPort: boolean;
   forwards: PortForward[];
 };
 
@@ -246,7 +247,7 @@ export type ErrorCode =
 
 export type Result<T> = { ok: true; value: T } | { ok: false; error: string; code: ErrorCode };
 
-export type Registration = { code: string };
+export type Registration = { code: string; referralDays?: number | null };
 
 export type Flavor = "prod" | "debug";
 
@@ -338,7 +339,7 @@ export type MantelBridge = {
   environment: () => Promise<Environment>;
   session: () => Promise<SessionInfo>;
   login: (code: string, totp?: string) => Promise<Result<SessionInfo>>;
-  register?: () => Promise<Result<Registration>>;
+  register?: (referralCode?: string) => Promise<Result<Registration>>;
   confirmRegistration?: () => Promise<Result<SessionInfo>>;
   logout: () => Promise<Result<null>>;
   account: () => Promise<Result<Account>>;
@@ -393,7 +394,8 @@ export type MantelBridge = {
   renameDevice?: (id: string, name: string) => Promise<Result<Device>>;
   removeDevice?: (id: string) => Promise<Result<null>>;
   devicePortForwarding?: (deviceId: string) => Promise<Result<PortForwardingState | null>>;
-  addPortForward?: (deviceId: string) => Promise<Result<PortForwardingState | null>>;
+  addPortForward?: (deviceId: string, localPort?: number | null) => Promise<Result<PortForwardingState | null>>;
+  setPortForwardLocalPort?: (deviceId: string, port: number, localPort: number | null) => Promise<Result<PortForwardingState | null>>;
   removePortForward?: (deviceId: string, port: number) => Promise<Result<PortForwardingState | null>>;
   proxies?: () => Promise<Result<ServerProxy[] | null>>;
   createProxy?: (input: ProxyCreate) => Promise<Result<ProxyWithPassword>>;
@@ -453,6 +455,7 @@ export const IPC = {
   devicePortForwarding: "mantel:device-port-forwarding",
   addPortForward: "mantel:add-port-forward",
   removePortForward: "mantel:remove-port-forward",
+  setPortForwardLocalPort: "mantel:set-port-forward-local-port",
   proxies: "mantel:proxies",
   createProxy: "mantel:create-proxy",
   updateProxy: "mantel:update-proxy",
